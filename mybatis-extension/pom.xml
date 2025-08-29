@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <!-- 父项目基本信息 -->
+        <groupId>org.wnn</groupId>
+        <artifactId>framework-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <groupId>org.wnn</groupId>
+    <artifactId>mybatis-extension</artifactId>
+    <version>1.0.0</version>
+
+    <!-- 多仓库发布的 Profile 配置 -->
+    <profiles>
+
+        <!-- 第一个仓库：例如“公司内部主仓库” -->
+        <profile>
+            <id>internal</id> <!-- Profile唯一标识，命令行通过此ID激活 -->
+            <distributionManagement>
+                <repository>
+                    <id>internal</id> <!-- 与settings.xml的server.id对应 -->
+                    <url>http://127.0.01:8702/repository/byte-keep-release/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+
+    </profiles>
+
+
+    <dependencies>
+        <!--  持久层框架  -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 1. 编译插件：指定Java版本，确保编译兼容性 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- 2. JAR打包插件：配置二方库的JAR包信息 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+
+            <!-- 3. 源码打包插件：生成源码JAR（方便其他项目查看源码） -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <!-- 4. Javadoc插件：生成API文档JAR（规范二方库的接口说明） -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <!-- 5. 部署插件：将二方库上传到内部仓库（如Nexus） -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
