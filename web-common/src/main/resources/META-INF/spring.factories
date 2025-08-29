@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.wnn.core.global.GlobalExceptionHandler,\
+  org.wnn.core.global.GlobalResponseWrapperAdvice,\
+  org.wnn.core.GlobalResponseAutoConfiguration,\
+  org.wnn.core.IdempotentAspectAutoConfiguration,\
+  org.wnn.core.LogFilterAutoConfiguration

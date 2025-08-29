@@ -1,0 +1,1 @@
+mvn clean deploy -P internal -s /Users/nanan/Documents/项目开发/settings.xml
