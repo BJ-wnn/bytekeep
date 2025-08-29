@@ -1,0 +1,11 @@
+POST http://127.0.0.1:8081/business/job/add
+Content-Type: application/json
+
+{
+    "effectiveDate": "2025-05-21",
+    "jobCode": "JOB001",
+    "jobName": "研发工程师",
+    "orgUnit": "移动事业部",
+    "jobGrade": "P4",
+    "jobStatus": 1
+}

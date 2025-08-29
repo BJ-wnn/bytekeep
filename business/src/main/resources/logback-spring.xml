@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 从spring 资源文件读取属性 -->
+    <springProperty scope="context" name="log.path" source="logging.root-path" defaultValue="logs"/>
+    <springProperty scope="context" name="log.service.name" source="spring.application.name" defaultValue="unknown"/>
+    <property name="log.req.name" value="HttpApiLog"/>
+    <property name="log.slowSql.name" value="slowSql"/>
+
+    <!-- ConsoleAppender：把日志输出到控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--   %d表示日期时间，默认是yyyy-MM-dd HH:mm:ss -->
+            <!--   %t 表示线程名称;  %-5level表示日志级别; %X{traceId} 表示MDC中的traceID;-->
+            <!-- %logger{36} ; .%M表示记录方法名称； %file:%line 表示日志记录方法所在的文件名和行号； %msg:表示日志消息； %n 换行符  -->
+            <pattern>%d [%t] %-5level | %X{traceId} | %logger{36}.%M\(%file:%line\) - %msg%n</pattern>
+            <!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- RollingFileAppender：滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
+    <!-- 以下的大概意思是：1.先按日期存日志，日期变了，将前一天的日志文件名重命名为XXX%日期%索引，新的日志仍然是demo.log -->
+    <!--             2.如果日期没有发生变化，但是当前日志的文件大小超过1KB时，对当前日志进行分割 重命名-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <File>${log.path}/${log.service.name}.log</File>
+        <!-- rollingPolicy:当发生滚动时，决定 RollingFileAppender 的行为，涉及文件移动和重命名。 -->
+        <!-- TimeBasedRollingPolicy： 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 活动文件的名字会根据fileNamePattern的值，每隔一段时间改变一次 -->
+            <!-- 定义归档文件名 -->
+            <fileNamePattern>${log.path}/arch/${log.service.name}-%d.%i.log</fileNamePattern>
+            <!-- 每产生一个日志文件，该日志文件的保存期限为3天 -->
+            <maxHistory>3</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <!-- maxFileSize:这是活动文件的大小，默认值是10MB，测试时可改成1KB看效果 -->
+            <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <!-- pattern节点，用来设置日志的输入格式 -->
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level | %X{traceId} | %logger{36}.%M\(%file:%line\) - %msg%n
+            </pattern>
+            <!-- 记录日志的编码:此处设置字符集 - -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- reqLog:记录请求日志 -->
+    <appender name="reqLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.path}/${log.req.name}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${log.path}/webHttpLog.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步日志 -->
+    <appender name="ASYNC_LOG" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="reqLog"/>
+    </appender>
+
+    <logger name="reqLog" level="INFO" additivity="false">
+        <appender-ref ref="reqLog" />
+    </logger>
+
+    <!-- 定义根日志级别为 INFO -->
+    <root level="INFO">
+        <!-- 将根日志连接到名为 STDOUT 的 appender -->
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

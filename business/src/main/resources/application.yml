@@ -1,0 +1,12 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /business
+
+spring:
+  profiles:
+    active: @env@
+
+feign:
+  url:
+    zipper: http://127.0.0.1:8080/portal
