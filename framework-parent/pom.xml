@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.wnn</groupId>
+    <artifactId>framework-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>framework-parent</name>
+    <description>Parent POM for byte-keep project, manages dependency versions</description>
+
+
+    <!-- 版本属性定义，集中管理所有依赖版本 -->
+    <properties>
+        <!-- 项目相关配置 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!-- 第三方依赖版本 -->
+        <spring-boot.version>2.6.13</spring-boot.version>
+        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <spring.cloud.version>2021.0.5</spring.cloud.version>
+
+<!--        <spring-boot.version>2.7.13</spring-boot.version>-->
+<!--        <spring-cloud-alibaba.version>2022.0.5</spring-cloud-alibaba.version>-->
+<!--        <spring-cloud.version>2022.0.5</spring-cloud.version>-->
+        <lombok.version>1.18.24</lombok.version>
+        <mysql.connector.version>8.0.26</mysql.connector.version>
+        <knife4j.version>4.4.0</knife4j.version>
+        <mybatis.version>2.2.2</mybatis.version>
+        <jasypt.version>3.0.4</jasypt.version>
+        <resilience4j.version>1.7.1</resilience4j.version>
+        <google.guava.version>31.1-jre</google.guava.version>
+        <jackson.verison>2.15.2</jackson.verison>
+
+
+        <!-- 二方库版本 -->
+        <web-common.version>1.0.0</web-common.version>
+        <feign-extension.version>1.0.0</feign-extension.version>
+
+        <!-- 可根据需要添加更多依赖版本 -->
+
+    </properties>
+
+    <!-- 部署配置 -->
+    <distributionManagement>
+        <repository>
+            <id>internal</id> <!-- 与settings.xml的server.id对应 -->
+            <url>http://127.0.01:8702/repository/byte-keep-release/</url>
+        </repository>
+    </distributionManagement>
+
+
+    <!-- 依赖管理：集中声明依赖版本，子项目引用时无需指定版本 -->
+    <dependencyManagement>
+        <dependencies>
+            <!--   二方库    -->
+            <!-- web层公共代码 -->
+            <dependency>
+                <groupId>org.wnn</groupId>
+                <artifactId>web-common</artifactId>
+                <version>${web-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wnn</groupId>
+                <artifactId>feign-extension</artifactId>
+                <version>${feign-extension.version}</version>
+            </dependency>
+
+
+            <!--   三方库    -->
+            <!-- Spring Boot 相关依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <!-- Spring Cloud 相关依赖 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!--  持久化框架  mybatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
+            <!-- MySQL 驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.version}</version>
+            </dependency>
+
+            <!--   接口文档管理     -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
+            <!--  配置文件内容安全  -->
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt.version}</version>
+            </dependency>
+
+            <!-- 接口重试 / 熔断、降级-->
+            <dependency>
+                <groupId>io.github.resilience4j</groupId>
+                <artifactId>resilience4j-spring-boot2</artifactId>
+                <version>${resilience4j.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.verison}</version> <!-- 版本号可以根据需要调整，建议使用较新的稳定版 -->
+            </dependency>
+
+            <!-- 阿里巴巴 ThreadLocal 传递框架：解决异步场景下 traceId 丢失问题 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>2.14.2</version> <!-- 建议使用最新稳定版本 -->
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <!-- 插件管理：集中管理插件版本 -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- 编译插件：指定Java版本，确保编译兼容性 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- JAR打包插件：配置二方库的JAR包信息 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <configuration>
+                        <!-- 可选：添加JAR包的元数据（如实现的接口、作者等） -->
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+
+                <!-- Javadoc插件：生成API文档JAR（规范二方库的接口说明） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.6.3</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal> <!-- 打包Javadoc -->
+                            </goals>
+                            <configuration>
+                                <encoding>${project.build.sourceEncoding}</encoding>
+                                <!-- 忽略Javadoc语法错误（避免因注释不规范导致构建失败） -->
+                                <failOnError>false</failOnError>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+
+
+                <!-- 源码打包插件：生成源码JAR（方便其他项目查看源码） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal> <!-- 打包源码，不触发额外编译 -->
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+
+                <!-- 部署插件：将二方库上传到内部仓库（如Nexus） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                    <configuration>
+                        <!-- 部署时跳过本地仓库（二方库通常直接上传远程仓库） -->
+                        <skip>false</skip>
+                    </configuration>
+                </plugin>
+
+
+                <!-- Spring Boot 插件 -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+
+
+                <!-- 依赖 插件-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+
+
+                <!-- Surefire 插件配置，用于控制测试执行 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M7</version>
+                    <configuration>
+                        <skipTests>true</skipTests>
+                    </configuration>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
