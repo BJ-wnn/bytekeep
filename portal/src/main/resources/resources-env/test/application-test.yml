@@ -1,0 +1,48 @@
+
+
+## 基础单数据源配置（以MySQL为例）
+#spring:
+#  datasource:
+#    # 数据库驱动类（不同数据库驱动类不同）
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    # 数据库连接URL（MySQL 8+需要指定时区serverTimezone）
+#    url: jdbc:mysql://my-mysql:3306/portal?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+#    # 数据库用户名
+#    username: root
+#    # 数据库密码
+#    password: ENC(zko8y4jnnf084CWe3KItgEx+3gH7MS8YnbIBFzeN1tA=)
+#    # 连接池配置（Spring Boot默认使用HikariCP）
+#    hikari:
+#      # 最大连接数（根据服务器性能调整）
+#      maximum-pool-size: 10
+#      # 最小空闲连接数
+#      minimum-idle: 5
+#      # 连接超时时间（毫秒）
+#      connection-timeout: 30000
+#      # 连接在池中的最大存活时间（毫秒）
+#      max-lifetime: 600000
+#      # 验证连接是否有效的查询语句（MySQL示例）
+#      connection-test-query: SELECT 1
+#  redis:
+#    # Redis服务器地址（默认localhost）
+#    host: my-redis-container
+#    # 端口（默认6379）
+#    port: 6379
+#    # 密码（若Redis未设置密码，可省略）
+#    # password: your_redis_password
+#    # 数据库索引（默认0，Redis支持16个数据库，0-15）
+#    database: 0
+#    # 连接超时时间（毫秒）
+#    timeout: 5000ms
+#    # 连接池配置（基于Lettuce，若用Jedis则替换为jedis节点）
+#    lettuce:
+#      pool:
+#        # 最大连接数（默认8）
+#        max-active: 8
+#        # 最大空闲连接（默认8）
+#        max-idle: 8
+#        # 最小空闲连接（默认0）
+#        min-idle: 2
+#        # 连接池最大阻塞等待时间（负值表示无限制，默认-1）
+#        max-wait: 1000ms
+

@@ -1,0 +1,23 @@
+GET  http://127.0.0.1:8080/portal/hello?name=lisi
+Idempotency-Key: c3dc09e457145fc4
+
+###
+POST  http://127.0.0.1:8080/portal/redis/setWithExpire
+Content-Type: application/x-www-form-urlencoded
+
+key=wang&value=nan&timeout=1
+
+
+###
+POST http://127.0.0.1:8080/portal//api/public/get-idempotent-token
+Content-Type: application/json
+
+{
+  "interfaceName": "test",
+  "interfaceParamStr": "intefaceParamStr123452",
+  "expireSeconds": 50
+}
+
+
+
+

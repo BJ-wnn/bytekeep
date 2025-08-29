@@ -1,0 +1,45 @@
+POST http://127.0.0.1:8080/portal/api/public/zipper-table/add
+Content-Type: application/json
+
+{
+  "zipperTableName": "job_info_zipper",
+  "effectiveDate": "2025-05-21",
+  "businessKeyValues": {
+    "jobCode": "JOB001",
+    "jobName": "研发工程师",
+    "orgUnit": "移动事业部",
+    "jobGrade": "P4",
+    "jobStatus": 1
+  }
+}
+
+
+###
+POST http://127.0.0.1:8080/portal/api/public/zipper-table/delete
+Content-Type: application/json
+
+{
+  "zipperTableName": "job_info_zipper",
+  "businessKeyValues": {
+    "id": 4,
+    "jobCode": "JOB001"
+  }
+}
+
+
+###
+POST http://127.0.0.1:8080/portal/api/public/zipper-table/update
+Content-Type: application/json
+
+{
+  "zipperTableName": "job_info_zipper",
+  "effectiveDate": "2025-05-22",
+  "businessKeyValues": {
+    "id": 7,
+    "jobCode": "JOB001",
+    "jobName": "修改测试",
+    "orgUnit": "移动事业部",
+    "jobGrade": "P4",
+    "jobStatus": 1
+  }
+}

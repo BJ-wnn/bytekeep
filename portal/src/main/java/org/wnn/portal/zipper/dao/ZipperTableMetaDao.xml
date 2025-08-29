@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wnn.portal.zipper.dao.ZipperTableMetaDao">
+
+    <!-- 通用结果集映射（数据库字段 → 实体类字段） -->
+    <resultMap id="ZipperTableMetaResultMap" type="org.wnn.portal.zipper.dao.entity.ZipperTableMeta">
+        <id column="id" property="id"/>
+        <result column="zipper_table_name" property="zipperTableName"/>
+        <result column="zipper_table_primary_key" property="zipperTablePrimaryKey"/>
+        <result column="zipper_table_select_sql" property="zipperTableSelectSql"/>
+        <result column="zipper_table_select_latest_sql" property="zipperTableSelectLatestSql"/>
+        <result column="zipper_table_insert_sql" property="zipperTableInsertSql"/>
+        <result column="zipper_table_update_sql" property="zipperTableUpdateSql"/>
+        <result column="zipper_table_delete_sql" property="zipperTableDeleteSql"/>
+        <result column="business_table_name" property="businessTableName"/>
+        <result column="business_table_insert_sql" property="businessTableInsertSql"/>
+        <result column="business_table_update_sql" property="businessTableUpdateSql"/>
+        <result column="business_table_delete_sql" property="businessTableDeleteSql"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_time" property="updatedTime"/>
+    </resultMap>
+
+    <!-- 1. 新增元信息配置 -->
+    <insert id="insert" parameterType="org.wnn.portal.zipper.dao.entity.ZipperTableMeta">
+        INSERT INTO zipper_table_meta (
+            zipper_table_name,
+            zipper_table_select_sql,
+            zipper_table_insert_sql,
+            zipper_table_update_sql,
+            zipper_table_delete_sql,
+            business_table_name,
+            business_table_insert_sql,
+            business_table_update_sql,
+            business_table_delete_sql,
+            description,
+            status,
+            created_by,
+            created_time
+        ) VALUES (
+                     #{zipperTableName},
+                     #{zipperTableSelectSql},
+                     #{zipperTableInsertSql},
+                     #{zipperTableUpdateSql},
+                     #{zipperTableDeleteSql},
+                     #{businessTableName},
+                     #{businessTableInsertSql},
+                     #{businessTableUpdateSql},
+                     #{businessTableDeleteSql},
+                     #{description},
+                     #{status},
+                     #{createdBy},
+                     NOW()
+                 )
+    </insert>
+
+    <!-- 2. 逻辑删除（更新状态为禁用） -->
+    <update id="deleteById">
+        UPDATE zipper_table_meta
+        SET
+            status = 0,
+            updated_by = #{updatedBy},
+            updated_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 3. 全量更新元信息配置 -->
+    <update id="update" parameterType="org.wnn.portal.zipper.dao.entity.ZipperTableMeta">
+        UPDATE zipper_table_meta
+        SET
+            zipper_table_name = #{zipperTableName},
+            zipper_table_select_sql = #{zipperTableSelectSql},
+            zipper_table_insert_sql = #{zipperTableInsertSql},
+            zipper_table_update_sql = #{zipperTableUpdateSql},
+            zipper_table_delete_sql = #{zipperTableDeleteSql},
+            business_table_name = #{businessTableName},
+            business_table_insert_sql = #{businessTableInsertSql},
+            business_table_update_sql = #{businessTableUpdateSql},
+            business_table_delete_sql = #{businessTableDeleteSql},
+            description = #{description},
+            status = #{status},
+            updated_by = #{updatedBy},
+            updated_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 4. 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="ZipperTableMetaResultMap">
+        SELECT * FROM zipper_table_meta WHERE id = #{id}
+    </select>
+
+    <!-- 5. 根据表名查询（用于唯一校验） -->
+    <select id="selectByTableName" parameterType="java.lang.String" resultMap="ZipperTableMetaResultMap">
+        SELECT * FROM zipper_table_meta WHERE zipper_table_name = #{zipperTableName}
+    </select>
+
+    <!-- 6. 查询所有元信息（简化版，实际可加分页） -->
+    <select id="selectAll" resultMap="ZipperTableMetaResultMap">
+        SELECT * FROM zipper_table_meta ORDER BY created_time DESC
+    </select>
+
+    <!-- 7. 查询启用的元信息 -->
+    <select id="selectEnabled" resultMap="ZipperTableMetaResultMap">
+        SELECT * FROM zipper_table_meta WHERE status = 1 ORDER BY created_time DESC
+    </select>
+
+</mapper>

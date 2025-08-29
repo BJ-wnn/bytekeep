@@ -1,0 +1,16 @@
+
+### 插入一个职位信息配置表
+POST http://127.0.0.1:8080/portal/zipper-meta/add
+Content-Type: application/json
+
+{
+  "zipperTableName": "job_info",
+  "queryConditions": "job_code=#{jobCode} AND job_status = 1",
+  "primaryKey": "id",
+  "effectiveDateColumnName": "effective_date",
+  "effectiveEndDateColumnName": "effective_end_date",
+  "businessTableName": "job_info_zipper",
+  "status": 1,
+  "description": "职位信息表"
+}
+

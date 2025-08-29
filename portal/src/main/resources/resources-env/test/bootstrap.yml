@@ -1,0 +1,26 @@
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    password: W_ML7sMC9G4scag2kOgP2tlNMUEuVNVLH0fE5sMKDdEYSbV-TEG215WiZ-1BVRRu
+
+spring:
+  application:
+    name:  bytekeep-portal
+  cloud:
+    nacos:
+      config:
+        server-addr: nacos-2:8848
+        username: nacos
+        password: nacos
+        namespace: b8045840-5730-474e-8e5f-01cb5a5b9e36
+        file-extension: yaml
+      discovery:
+        server-addr: nacos-2:8848
+        username: nacos
+        password: nacos
+        namespace: public
+  config:
+    import:
+      - nacos:common-datasource.yaml?group=COMMON_GROUP
+      - nacos:common-redis.yaml?group=COMMON_GROUP
+      - nacos:common-web-config.yaml?group=COMMON_GROUP
